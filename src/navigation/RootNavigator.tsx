@@ -3,7 +3,7 @@ import { Pressable, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { AP_Text, AP_Badge, useI18n, colors } from '@apex/shared';
+import { AP_Badge, AP_Icon, useI18n, colors } from '@apex/shared';
 import { RootStackParamList, MainTabParamList } from './types';
 import { useAuth } from './AuthContext';
 import { LoginScreen } from '../screens/LoginScreen';
@@ -21,17 +21,17 @@ import { SettingsScreen } from '../screens/SettingsScreen';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
-const tabIcon = (glyph: string) => (active: boolean) =>
-  <AP_Text color={active ? colors.brand : colors.muted}>{glyph}</AP_Text>;
+const tabIcon = (name: string) => (focused: boolean) =>
+  <AP_Icon name={name} size={22} color={focused ? colors.brand : colors.muted} />;
 
 const HeaderTools: React.FC<{ onBell: () => void; onSettings: () => void }> = ({ onBell, onSettings }) => (
-  <View style={{ flexDirection: 'row', gap: 16, paddingHorizontal: 12 }}>
+  <View style={{ flexDirection: 'row', gap: 16, paddingHorizontal: 12, alignItems: 'center' }}>
     <Pressable onPress={onBell}>
-      <AP_Text color={colors.white}>🔔</AP_Text>
+      <AP_Icon name="bell" size={21} color={colors.white} />
       <AP_Badge count={3} />
     </Pressable>
     <Pressable onPress={onSettings}>
-      <AP_Text color={colors.white}>⚙️</AP_Text>
+      <AP_Icon name="settings" size={20} color={colors.white} />
     </Pressable>
   </View>
 );
@@ -53,11 +53,11 @@ const MainTabs: React.FC = () => {
         ),
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} options={{ title: t('home'), tabBarIcon: ({ focused }) => tabIcon('🏠')(focused) }} />
-      <Tab.Screen name="Timeline" component={TimelineScreen} options={{ title: t('timeline'), tabBarIcon: ({ focused }) => tabIcon('📋')(focused) }} />
-      <Tab.Screen name="Records" component={RecordsScreen} options={{ title: t('records'), tabBarIcon: ({ focused }) => tabIcon('📁')(focused) }} />
-      <Tab.Screen name="Messages" component={MessagesScreen} options={{ title: t('messages'), tabBarIcon: ({ focused }) => tabIcon('💬')(focused) }} />
-      <Tab.Screen name="Meetings" component={MeetingsScreen} options={{ title: t('meetings'), tabBarIcon: ({ focused }) => tabIcon('📅')(focused) }} />
+      <Tab.Screen name="Home" component={HomeScreen} options={{ title: t('home'), tabBarIcon: ({ focused }) => tabIcon('home')(focused) }} />
+      <Tab.Screen name="Timeline" component={TimelineScreen} options={{ title: t('timeline'), tabBarIcon: ({ focused }) => tabIcon('clipboard')(focused) }} />
+      <Tab.Screen name="Records" component={RecordsScreen} options={{ title: t('records'), tabBarIcon: ({ focused }) => tabIcon('folder')(focused) }} />
+      <Tab.Screen name="Messages" component={MessagesScreen} options={{ title: t('messages'), tabBarIcon: ({ focused }) => tabIcon('message')(focused) }} />
+      <Tab.Screen name="Meetings" component={MeetingsScreen} options={{ title: t('meetings'), tabBarIcon: ({ focused }) => tabIcon('calendar')(focused) }} />
     </Tab.Navigator>
   );
 };

@@ -7,6 +7,7 @@ import {
   AP_Text,
   AP_Avatar,
   AP_Button,
+  AP_Icon,
   useI18n,
   colors,
 } from '@apex/shared';
@@ -38,7 +39,13 @@ export const SettingsScreen: React.FC<Props> = ({ navigation }) => {
         </View>
       </AP_Card>
       <AP_Card>
-        <AP_Button label={t('logout')} variant="danger" full onPress={signOut} />
+        <AP_Button
+          label={t('logout')}
+          variant="danger"
+          full
+          icon={<AP_Icon name="logout" size={17} color={colors.high} />}
+          onPress={signOut}
+        />
         <AP_Text variant="caption" align="center" color={colors.muted} style={styles.ver}>
           Apex AI · Parent App · v1
         </AP_Text>

@@ -7,6 +7,8 @@ import {
   AP_Text,
   AP_Textbox,
   AP_Button,
+  AP_Logo,
+  AP_Icon,
   useI18n,
   colors,
 } from '@apex/shared';
@@ -44,6 +46,9 @@ export const LoginScreen: React.FC<Props> = ({ navigation }) => {
         <AP_Button label="EN" variant={lang === 'en' ? 'primary' : 'ghost'} onPress={() => setLang('en')} />
         <AP_Button label="ع" variant={lang === 'ar' ? 'primary' : 'ghost'} onPress={() => setLang('ar')} />
       </View>
+      <View style={styles.logoWrap}>
+        <AP_Logo size={64} />
+      </View>
       <AP_Text variant="h1" align="center" color={colors.brand}>
         APEX
       </AP_Text>
@@ -68,7 +73,7 @@ export const LoginScreen: React.FC<Props> = ({ navigation }) => {
           onChangeText={setPassword}
           secureTextEntry={!show}
           placeholder="••••••••"
-          trailing={<AP_Text color={colors.muted}>{show ? '🙈' : '👁'}</AP_Text>}
+          trailing={<AP_Icon name={show ? 'eyeOff' : 'eye'} size={18} color={colors.muted} />}
           onTrailingPress={() => setShow((s) => !s)}
           hint={t('pwdHint')}
         />
@@ -89,6 +94,7 @@ export const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   langRow: { flexDirection: 'row', justifyContent: 'flex-end', gap: 8, marginBottom: 8 },
+  logoWrap: { alignItems: 'center', marginBottom: 8 },
   tag: { marginBottom: 16 },
   lead: { marginBottom: 16 },
   divider: { alignItems: 'center', marginVertical: 14 },

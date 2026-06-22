@@ -8,7 +8,9 @@ import {
   AP_Button,
   AP_StatusPill,
   AP_EmptyState,
+  AP_Icon,
   useI18n,
+  colors,
 } from '@apex/shared';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
@@ -23,6 +25,7 @@ export const ApprovalsScreen: React.FC<Props> = ({ navigation }) => {
       <AP_Card title={t('needsResponse')}>
         <AP_ListItem
           tone="high"
+          leading={<AP_Icon name="alert" size={20} color={colors.high} />}
           title={L({ en: 'Acknowledge behavior note', ar: 'الإقرار بملاحظة سلوك' })}
           description={L({ en: 'Late to class 3 times this week.', ar: 'تأخر عن الصف 3 مرات هذا الأسبوع.' })}
           trailing={<AP_StatusPill label="HIGH" tone="high" />}
