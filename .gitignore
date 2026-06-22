@@ -22,9 +22,29 @@ coverage/
 *.p8
 *.p12
 *.key
+*.keystore
 *.mobileprovision
 *.orig.*
 web-build/
+
+# Android (bare React Native CLI)
+android/build/
+android/app/build/
+android/.gradle/
+.gradle/
+android/.kotlin/
+android/app/.cxx/
+android/local.properties
+*.hprof
+*.iml
+
+# iOS (bare React Native CLI)
+ios/build/
+ios/Pods/
+ios/Podfile.lock
+*.xcuserstate
+ios/.xcode.env.local
+DerivedData/
 
 # Prisma
 prisma/*.db

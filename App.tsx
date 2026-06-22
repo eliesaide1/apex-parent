@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
   configureI18n,
@@ -31,15 +32,17 @@ export default function App() {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <AuthProvider>
-        <StatusBar style="light" />
-        <RootNavigator />
-        {/* Global loader (interceptor) + global alert (clientProxy) + toast */}
-        <AP_Loader global />
-        <AP_Alert />
-        <AP_Toast />
-      </AuthProvider>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <AuthProvider>
+          <StatusBar barStyle="light-content" />
+          <RootNavigator />
+          {/* Global loader (interceptor) + global alert (clientProxy) + toast */}
+          <AP_Loader global />
+          <AP_Alert />
+          <AP_Toast />
+        </AuthProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

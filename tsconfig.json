@@ -1,9 +1,10 @@
 {
-  "extends": "expo/tsconfig.base",
+  "extends": "@react-native/typescript-config",
   "compilerOptions": {
     "strict": true,
-    "preserveSymlinks": true,
     "baseUrl": ".",
+    "preserveSymlinks": true,
+    "types": ["jest", "node"],
     "paths": {
       "@apex/shared": ["./node_modules/@apex/shared/src/index.ts"],
       "@apex/shared/*": ["./node_modules/@apex/shared/src/*"]
@@ -14,5 +15,6 @@
     "**/*.tsx",
     "node_modules/@apex/shared/src/**/*.ts",
     "node_modules/@apex/shared/src/**/*.tsx"
-  ]
+  ],
+  "exclude": ["**/Pods/**"]
 }

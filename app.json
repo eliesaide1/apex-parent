@@ -1,22 +1,4 @@
 {
-  "expo": {
-    "name": "Apex Parent",
-    "slug": "apex-parent",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "scheme": "apexparent",
-    "userInterfaceStyle": "light",
-    "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "app.apex.parent"
-    },
-    "android": {
-      "package": "app.apex.parent",
-      "edgeToEdgeEnabled": true
-    },
-    "web": {
-      "bundler": "metro"
-    }
-  }
+  "name": "ApexParent",
+  "displayName": "Apex Parent"
 }
