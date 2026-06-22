@@ -15,16 +15,17 @@ import { strings } from './src/i18n/strings';
 import { API_BASE_URL } from './src/config';
 import { AuthProvider } from './src/navigation/AuthContext';
 import { RootNavigator } from './src/navigation/RootNavigator';
-import { registerParentMocks } from './src/api/mocks';
+// Mock adapter kept in the repo but INACTIVE — requests hit the live backend.
+// import { registerParentMocks } from './src/api/mocks';
 
 // Bootstrap shared singletons once, before render.
 // Brand the shared AP_ library teal for parents (this is also the default).
 configureTheme(PARENT_BRAND);
 configureI18n(strings, 'en');
 initClientProxy({ baseURL: API_BASE_URL });
-// Offline seed: serve the parent routes locally (frozen envelope) until the one
-// shared backend is reachable. Everything still flows through clientProxy.
-registerParentMocks();
+// LIVE backend: the in-process mock adapter is no longer registered, so the
+// identical clientProxy calls now hit http://localhost:3000/api (real Postgres).
+// registerParentMocks();
 
 export default function App() {
   useEffect(() => {

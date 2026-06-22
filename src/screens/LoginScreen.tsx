@@ -22,7 +22,7 @@ export const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const { t, setLang, lang } = useI18n();
   const { signIn } = useAuth();
   const [email, setEmail] = useState('parent@apex.app');
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState('demopass');
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
 
