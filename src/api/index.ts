@@ -40,6 +40,17 @@ export interface MeetingDto {
   status: 'confirmed' | 'pending' | 'declined';
 }
 
+/** Mirrors the backend NotificationDto (parent-bff.service.ts). */
+export interface NotificationDto {
+  id: string;
+  title: string;
+  body: string;
+  category: string;
+  priority: 'high' | 'medium' | 'low';
+  read: boolean;
+  createdAt: string;
+}
+
 export const api = {
   // Foundation
   listChildren: () => clientProxy.get<Child[]>('/parent/children'),
@@ -53,6 +64,9 @@ export const api = {
   actApproval: (id: string, approve: boolean) =>
     clientProxy.post<ApprovalDto>(`/parent/approvals/${id}/${approve ? 'approve' : 'decline'}`),
   listMeetings: () => clientProxy.get<MeetingDto[]>('/parent/meetings'),
+  listNotifications: () => clientProxy.get<NotificationDto[]>('/parent/notifications'),
+  markNotificationRead: (id: string) =>
+    clientProxy.post<NotificationDto>(`/parent/notifications/${id}/read`),
   bookMeeting: (body: { type: string; with: string; preferredTime: string; note?: string }) =>
     clientProxy.post<MeetingDto>('/parent/meetings', body),
   cancelMeeting: (id: string) => clientProxy.delete<void>(`/parent/meetings/${id}`),

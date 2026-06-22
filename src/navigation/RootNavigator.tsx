@@ -3,7 +3,7 @@ import { Pressable, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { AP_Badge, AP_Icon, useI18n, colors } from '@apex/shared';
+import { AP_Badge, AP_Icon, useI18n, useUnreadCount, colors } from '@apex/shared';
 import { RootStackParamList, MainTabParamList } from './types';
 import { useAuth } from './AuthContext';
 import { LoginScreen } from '../screens/LoginScreen';
@@ -24,17 +24,21 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 const tabIcon = (name: string) => (focused: boolean) =>
   <AP_Icon name={name} size={22} color={focused ? colors.brand : colors.muted} />;
 
-const HeaderTools: React.FC<{ onBell: () => void; onSettings: () => void }> = ({ onBell, onSettings }) => (
+const HeaderTools: React.FC<{ onBell: () => void; onSettings: () => void }> = ({ onBell, onSettings }) => {
+  // Bell badge = live unread notification count from the shared store.
+  const unread = useUnreadCount();
+  return (
   <View style={{ flexDirection: 'row', gap: 16, paddingHorizontal: 12, alignItems: 'center' }}>
     <Pressable onPress={onBell}>
       <AP_Icon name="bell" size={21} color={colors.white} />
-      <AP_Badge count={3} />
+      <AP_Badge count={unread} />
     </Pressable>
     <Pressable onPress={onSettings}>
       <AP_Icon name="settings" size={20} color={colors.white} />
     </Pressable>
   </View>
-);
+  );
+};
 
 const MainTabs: React.FC = () => {
   const { t } = useI18n();

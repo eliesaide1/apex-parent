@@ -7,6 +7,7 @@ import {
   configureTheme,
   PARENT_BRAND,
   initClientProxy,
+  configureRealtime,
   AP_Alert,
   AP_Loader,
   AP_Toast,
@@ -23,6 +24,8 @@ import { RootNavigator } from './src/navigation/RootNavigator';
 configureTheme(PARENT_BRAND);
 configureI18n(strings, 'en');
 initClientProxy({ baseURL: API_BASE_URL });
+// Realtime socket talks to the host root + /live (API_BASE_URL minus /api).
+configureRealtime(API_BASE_URL);
 // LIVE backend: the in-process mock adapter is no longer registered, so the
 // identical clientProxy calls now hit http://localhost:3000/api (real Postgres).
 // registerParentMocks();
