@@ -1,0 +1,18 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "preserveSymlinks": true,
+    "baseUrl": ".",
+    "paths": {
+      "@apex/shared": ["./node_modules/@apex/shared/src/index.ts"],
+      "@apex/shared/*": ["./node_modules/@apex/shared/src/*"]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "node_modules/@apex/shared/src/**/*.ts",
+    "node_modules/@apex/shared/src/**/*.tsx"
+  ]
+}
