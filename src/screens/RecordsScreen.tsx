@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { AP_Screen, AP_Card, AP_Text, AP_Icon, useI18n, colors } from '@apex/shared';
+import { useChildren } from '../navigation/ChildContext';
 
 /** Record tiles — keys / icons / colors copied from apex-parent-app.html `recordTiles`. */
 const tiles: Array<{ key: string; icon: string; val: string; color: string }> = [
@@ -16,8 +17,16 @@ const tiles: Array<{ key: string; icon: string; val: string; color: string }> = 
 
 export const RecordsScreen: React.FC = () => {
   const { t, L } = useI18n();
+  // Active child from ChildContext — records are scoped to the selected child.
+  const { children, activeChildId } = useChildren();
+  const activeChild = children.find((c) => c.id === activeChildId);
   return (
     <AP_Screen>
+      {activeChild ? (
+        <AP_Text variant="label" color={colors.muted} style={styles.secLabel}>
+          {t('recordsHub')} — {activeChild.name}
+        </AP_Text>
+      ) : null}
       <View style={styles.grid}>
         {tiles.map((tile) => (
           <AP_Card key={tile.key} style={styles.tile}>
@@ -42,6 +51,7 @@ export const RecordsScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  secLabel: { textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 10, marginLeft: 4 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 11 },
   tile: { width: '47%', marginBottom: 0, gap: 6 },
   ti: { width: 40, height: 40, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginBottom: 4 },

@@ -2,10 +2,22 @@ import React from 'react';
 import { Pressable, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { AP_Badge, AP_Icon, useI18n, useUnreadCount, colors } from '@apex/shared';
+import {
+  createBottomTabNavigator,
+  BottomTabHeaderProps,
+} from '@react-navigation/bottom-tabs';
+import {
+  AP_Badge,
+  AP_Icon,
+  AP_AppHeader,
+  AP_HeaderChip,
+  useI18n,
+  useUnreadCount,
+  colors,
+} from '@apex/shared';
 import { RootStackParamList, MainTabParamList } from './types';
 import { useAuth } from './AuthContext';
+import { ChildProvider, useChildren } from './ChildContext';
 import { LoginScreen } from '../screens/LoginScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
 import { HomeScreen } from '../screens/HomeScreen';
@@ -24,19 +36,58 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 const tabIcon = (name: string) => (focused: boolean) =>
   <AP_Icon name={name} size={22} color={focused ? colors.brand : colors.muted} />;
 
+/** Tabs whose content is scoped to the active child — these show the chip row. */
+const CHILD_SCOPED = new Set(['Home', 'Timeline', 'Records']);
+
+/** Bell (with live unread badge) + settings gear — the header tools slot. */
 const HeaderTools: React.FC<{ onBell: () => void; onSettings: () => void }> = ({ onBell, onSettings }) => {
-  // Bell badge = live unread notification count from the shared store.
   const unread = useUnreadCount();
   return (
-  <View style={{ flexDirection: 'row', gap: 16, paddingHorizontal: 12, alignItems: 'center' }}>
-    <Pressable onPress={onBell}>
-      <AP_Icon name="bell" size={21} color={colors.white} />
-      <AP_Badge count={unread} />
-    </Pressable>
-    <Pressable onPress={onSettings}>
-      <AP_Icon name="settings" size={20} color={colors.white} />
-    </Pressable>
-  </View>
+    <>
+      <Pressable onPress={onBell}>
+        <AP_Icon name="bell" size={21} color={colors.white} />
+        <AP_Badge count={unread} />
+      </Pressable>
+      <Pressable onPress={onSettings}>
+        <AP_Icon name="settings" size={20} color={colors.white} />
+      </Pressable>
+    </>
+  );
+};
+
+/**
+ * The single teal header block for the parent Tab.Navigator. Renders the logo +
+ * APEX wordmark, the current tab title, today's date, the bell/settings tools,
+ * and (for child-scoped tabs) the child switcher chips from ChildContext.
+ */
+const ParentHeader: React.FC<BottomTabHeaderProps> = ({ navigation, route, options }) => {
+  const { formatHeaderDate } = useI18n();
+  const { children, activeChildId, setActiveChild } = useChildren();
+  const showChips = CHILD_SCOPED.has(route.name) && children.length > 0;
+  return (
+    <AP_AppHeader
+      title={options.title ?? route.name}
+      subtitle={formatHeaderDate()}
+      right={
+        <HeaderTools
+          onBell={() => navigation.getParent()?.navigate('Notifications' as never)}
+          onSettings={() => navigation.getParent()?.navigate('Settings' as never)}
+        />
+      }
+    >
+      {showChips
+        ? children.map((c) => (
+            <AP_HeaderChip
+              key={c.id}
+              label={c.name}
+              initials={c.initials}
+              color={c.color}
+              active={c.id === activeChildId}
+              onPress={() => setActiveChild(c.id)}
+            />
+          ))
+        : null}
+    </AP_AppHeader>
   );
 };
 
@@ -44,18 +95,11 @@ const MainTabs: React.FC = () => {
   const { t } = useI18n();
   return (
     <Tab.Navigator
-      screenOptions={({ navigation }) => ({
-        headerStyle: { backgroundColor: colors.brand },
-        headerTintColor: colors.white,
+      screenOptions={{
+        header: (props) => <ParentHeader {...props} />,
         tabBarActiveTintColor: colors.brand,
         tabBarInactiveTintColor: colors.muted,
-        headerRight: () => (
-          <HeaderTools
-            onBell={() => navigation.getParent()?.navigate('Notifications')}
-            onSettings={() => navigation.getParent()?.navigate('Settings')}
-          />
-        ),
-      })}
+      }}
     >
       <Tab.Screen name="Home" component={HomeScreen} options={{ title: t('home'), tabBarIcon: ({ focused }) => tabIcon('home')(focused) }} />
       <Tab.Screen name="Timeline" component={TimelineScreen} options={{ title: t('timeline'), tabBarIcon: ({ focused }) => tabIcon('clipboard')(focused) }} />
@@ -73,7 +117,13 @@ export const RootNavigator: React.FC = () => {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {token ? (
           <>
-            <Stack.Screen name="Main" component={MainTabs} />
+            <Stack.Screen name="Main">
+              {() => (
+                <ChildProvider>
+                  <MainTabs />
+                </ChildProvider>
+              )}
+            </Stack.Screen>
             <Stack.Screen name="Approvals" component={ApprovalsScreen} />
             <Stack.Screen name="Calendar" component={CalendarScreen} />
             <Stack.Screen name="Notifications" component={NotificationsScreen} />

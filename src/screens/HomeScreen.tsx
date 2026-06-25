@@ -13,32 +13,27 @@ import {
   useI18n,
   colors,
 } from '@apex/shared';
-import { api, Child, TimelineEventDto, ApprovalDto, MeetingDto } from '../api';
+import { api, TimelineEventDto, ApprovalDto, MeetingDto } from '../api';
+import { useChildren } from '../navigation/ChildContext';
 
 /** Home dashboard — current status hero, pending approvals, today's timeline summary, meetings. All data via clientProxy. */
 export const HomeScreen: React.FC = () => {
   const { t, L } = useI18n();
-  const [children, setChildren] = useState<Child[]>([]);
-  const [activeId, setActiveId] = useState<string | null>(null);
+  // Child switcher state now lives in ChildContext (rendered in the teal header).
+  const { children, activeChildId: activeId } = useChildren();
   const [timeline, setTimeline] = useState<TimelineEventDto[]>([]);
   const [approvals, setApprovals] = useState<ApprovalDto[]>([]);
   const [meetings, setMeetings] = useState<MeetingDto[]>([]);
 
-  // Load children + approvals + meetings once.
+  // Load approvals + meetings once (children come from context).
   useEffect(() => {
     let active = true;
     (async () => {
       try {
-        const [kids, apps, mtgs] = await Promise.all([
-          api.listChildren(),
-          api.listApprovals(),
-          api.listMeetings(),
-        ]);
+        const [apps, mtgs] = await Promise.all([api.listApprovals(), api.listMeetings()]);
         if (!active) return;
-        setChildren(kids);
         setApprovals(apps);
         setMeetings(mtgs);
-        if (kids.length && !activeId) setActiveId(kids[0].id);
       } catch {
         /* clientProxy already alerted */
       }
@@ -46,7 +41,6 @@ export const HomeScreen: React.FC = () => {
     return () => {
       active = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Reload the timeline whenever the active child changes.
@@ -76,19 +70,6 @@ export const HomeScreen: React.FC = () => {
 
   return (
     <AP_Screen>
-      {children.length > 1 ? (
-        <View style={styles.childRow}>
-          {children.map((c) => (
-            <AP_Button
-              key={c.id}
-              label={c.name}
-              variant={c.id === activeId ? 'primary' : 'ghost'}
-              onPress={() => setActiveId(c.id)}
-            />
-          ))}
-        </View>
-      ) : null}
-
       <AP_Card hero title={t('currentStatus')}>
         <View style={styles.heroRow}>
           <View style={styles.heroPulse}>
@@ -192,7 +173,6 @@ export const HomeScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  childRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 12 },
   heroRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginVertical: 8 },
   heroPulse: {
     width: 46,
