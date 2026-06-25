@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@apex/shared": "file:../shared",
+    "@apex/shared": "file:../apex-shared",
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/native": "^7.1.6",

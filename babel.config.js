@@ -5,7 +5,7 @@ module.exports = {
       'module-resolver',
       {
         alias: {
-          '@apex/shared': '../shared/src/index.ts',
+          '@apex/shared': '../apex-shared/src/index.ts',
         },
       },
     ],
