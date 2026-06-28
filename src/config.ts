@@ -3,4 +3,4 @@
  * the RN_API_URL env var (inlined by Metro/Babel); defaults to the local backend.
  */
 export const API_BASE_URL =
-  process.env.RN_API_URL ?? 'https://apex-backend.onrender.com/api';
+  process.env.RN_API_URL ?? 'https://apex-backend-jp7k.onrender.com/api';
